@@ -1,0 +1,24 @@
+---
+import Layout from '../layouts/Layout.astro';
+const posts = await Astro.glob('../content/posts/*.{md,mdx}');
+---
+<Layout title="Crônicas — Início">
+  <section class="mb-12">
+    <h1 class="text-5xl font-bold text-stone-900 mb-4 text-center italic">Crônicas</h1>
+    <p class="text-stone-500 text-center text-lg italic">Pensamentos, tecnologia e cotidiano.</p>
+  </section>
+
+  <div class="space-y-12">
+    {posts.map((post) => (
+      <article class="group">
+        <a href={`/posts/${post.file.split('/').pop().split('.')[0]}`}>
+          <h2 class="text-3xl font-bold text-stone-900 group-hover:text-amber-600 transition-colors mb-2">
+            {post.frontmatter.title}
+          </h2>
+          <p class="text-stone-600 leading-relaxed line-clamp-3">{post.frontmatter.summary}</p>
+          <div class="mt-4 text-amber-600 font-semibold text-sm">Ler mais →</div>
+        </a>
+      </article>
+    ))}
+  </div>
+</Layout>
