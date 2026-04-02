@@ -1,0 +1,53 @@
+---
+// src/pages/index.astro
+import Layout from '../layouts/Layout.astro';
+
+// Busca todos os arquivos .md na pasta de posts
+const posts = await Astro.glob('../content/posts/*.{md,mdx}');
+
+// Organiza para o mais recente aparecer primeiro
+const sortedPosts = posts.sort(
+  (a, b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime()
+);
+---
+
+<Layout title="Crônicas — Início" description="Bem-vindo ao meu blog de alta performance.">
+  <section class="mb-16 text-center">
+    <h1 class="text-6xl font-bold text-stone-900 mb-4 italic font-serif tracking-tight">Crônicas</h1>
+    <div class="flex items-center justify-center gap-4">
+      <div class="h-px w-12 bg-stone-300"></div>
+      <p class="text-stone-500 text-lg italic font-serif">Relatos, ideias e tecnologia</p>
+      <div class="h-px w-12 bg-stone-300"></div>
+    </div>
+  </section>
+
+  <div class="space-y-20 mt-12">
+    {sortedPosts.map((post) => {
+      const slug = post.file.split('/').pop().split('.')[0];
+      return (
+        <article class="group relative flex flex-col items-start border-b border-stone-100 pb-12 last:border-0">
+          <time class="text-xs uppercase tracking-widest text-amber-600 font-semibold mb-3">
+            {post.frontmatter.date}
+          </time>
+          <h2 class="text-3xl font-bold text-stone-900 group-hover:text-amber-700 transition-colors mb-4 font-serif leading-tight">
+            <a href={`/posts/${slug}`}>
+              {post.frontmatter.title}
+            </a>
+          </h2>
+          <p class="text-stone-600 leading-relaxed line-clamp-3 mb-6 text-lg font-serif italic">
+            {post.frontmatter.summary}
+          </p>
+          <a href={`/posts/${slug}`} class="group-hover:translate-x-2 transition-transform inline-flex items-center text-stone-900 font-bold text-sm uppercase tracking-widest hover:text-amber-700">
+            Ler crônica completa <span class="ml-2 text-amber-600">→</span>
+          </a>
+        </article>
+      );
+    })}
+  </div>
+
+  {posts.length === 0 && (
+    <div class="text-center py-20 bg-stone-100 rounded-lg border-2 border-dashed border-stone-200">
+      <p class="text-stone-400 italic font-serif text-xl">Nenhuma crônica publicada ainda...</p>
+    </div>
+  )}
+</Layout>
